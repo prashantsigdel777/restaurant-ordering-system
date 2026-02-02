@@ -1,5 +1,15 @@
 <?php
 session_start();
-unset($_SESSION['is_admin']);
-header('Location: /restaurant/index.php');
+
+/* Unset all session variables */
+$_SESSION = [];
+
+/* Destroy the session */
+session_destroy();
+
+/* Regenerate session ID for safety */
+session_regenerate_id(true);
+
+/* Redirect to admin login page */
+header('Location: /restaurant/admin/login.php');
 exit;
