@@ -1,4 +1,4 @@
 </main>
-<script src="/restaurant/assets/app.js"></script>
+<script src="<?= $BASE_URL ?>/assets/app.js"></script>
 </body>
 </html>

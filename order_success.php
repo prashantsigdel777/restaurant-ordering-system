@@ -47,7 +47,9 @@ $orderItems = $items->fetchAll();
   </table>
 
   <div style="margin-top:12px;">
-    <a class="btn" href="/restaurant/menu.php">Back to Menu</a>
+    <a class="btn" href="<?= $BASE_URL ?>/menu.php">Back to Menu</a>
+
+
   </div>
 </div>
 

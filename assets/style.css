@@ -1,106 +1,254 @@
-body {
+/* ===============================
+   RESET & BASE
+================================ */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #f4f6f8;
+  padding: 0;
 }
 
+body {
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  background: #f6f7f9;
+  color: #222;
+  line-height: 1.6;
+}
+
+a {
+  color: #6a3df0;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+/* ===============================
+   LAYOUT
+================================ */
 .wrap {
-  max-width: 1100px;
-  margin: auto;
-  padding: 20px;
-}
-
-.topbar {
-  background: white;
-  border-bottom: 1px solid #ddd;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  font-size: 22px;
-  font-weight: 800;
-  text-decoration: none;
-  color: #111;
-}
-
-nav a {
-  margin-left: 14px;
-  text-decoration: none;
-  color: #333;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
 .card {
-  background: white;
+  background: #ffffff;
+  border-radius: 14px;
   padding: 20px;
-  border-radius: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  overflow-x: auto; /* important for admin tables */
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+/* ===============================
+   HEADER / NAVBAR
+================================ */
+.topbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
 }
 
-.menu-img,
-.hero-img {
-  width: 100%;
-  height: 450px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin-bottom: 12px;
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav a {
+  margin-left: 18px;
+  font-weight: 500;
+}
+
+#cartCount {
+  font-weight: bold;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
 .btn {
-  padding: 10px 14px;
-  border-radius: 20px;
-  border: 1px solid #333;
-  background: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
   cursor: pointer;
-  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: #f0f0ff;
 }
 
 .btn.primary {
-  background: black;
-  color: white;
+  background: #6a3df0;
+  color: #fff;
+  border-color: #6a3df0;
+}
+
+.btn.primary:hover {
+  background: #5630d9;
+}
+
+/* ===============================
+   GRID SYSTEM (MENU)
+================================ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* ===============================
+   MENU ITEMS
+================================ */
+.menu-img {
+  height: 200px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #eee;
+}
+
+/* ===============================
+   FORMS
+================================ */
+label {
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 input,
-select {
-  width: 100%;
+select,
+textarea {
   padding: 10px;
-  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
-.error {
-  background: #ffe0e0;
-  padding: 10px;
-  border-radius: 10px;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #6a3df0;
 }
-/* Fix action buttons alignment in tables */
-td.actions,
-th.actions {
-  width: 140px;
+
+/* ===============================
+   TABLES (ADMIN)
+================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+/* ===============================
+   🔥 ADMIN ORDERS FIX (IMPORTANT)
+================================ */
+th.actions,
+td.actions {
+  width: 180px;
   text-align: right;
   white-space: nowrap;
 }
 
-.table-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+td.actions .btn {
+  display: inline-flex !important;
+  width: auto !important;
+  min-width: 130px;
+  justify-content: center;
 }
 
-.table-actions .btn {
-  padding: 8px 12px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 110px;
+/* ===============================
+   ADMIN DASHBOARD BUTTON ROW
+================================ */
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ===============================
+   CART
+================================ */
+.cart-table td,
+.cart-table th {
+  vertical-align: middle;
+}
+
+.cart-total {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+footer {
+  text-align: center;
+  padding: 24px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .topbar .wrap {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav a {
+    margin-left: 0;
+    margin-right: 12px;
+  }
 }

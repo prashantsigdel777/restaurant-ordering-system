@@ -1,12 +1,11 @@
 <?php
 require_once __DIR__ . '/header.php';
 
-// --- Search filters ---
+$q        = trim($_GET['q'] ?? '');
 $minPrice = trim($_GET['min_price'] ?? '');
 $maxPrice = trim($_GET['max_price'] ?? '');
 $cuisine  = trim($_GET['cuisine'] ?? '');
-$avail    = trim($_GET['available'] ?? '1'); // default: available only
-$q        = trim($_GET['q'] ?? '');          // NEW: name search
+$avail    = trim($_GET['available'] ?? '1');
 
 $params = [];
 
@@ -17,10 +16,9 @@ $sql = "
   WHERE 1=1
 ";
 
-/* NEW: keyword search */
 if ($q !== '') {
   $sql .= " AND (mi.name LIKE ? OR mi.description LIKE ?)";
-  $like = "%$q%";
+  $like = "%{$q}%";
   $params[] = $like;
   $params[] = $like;
 }
@@ -51,36 +49,31 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $items = $stmt->fetchAll();
 
-// cuisines dropdown
-$cuisines = $pdo->query("SELECT DISTINCT cuisine FROM menu_items ORDER BY cuisine")->fetchAll(PDO::FETCH_COLUMN);
+$cuisines = $pdo->query("SELECT DISTINCT cuisine FROM menu_items ORDER BY cuisine")
+               ->fetchAll(PDO::FETCH_COLUMN);
 ?>
 
 <h1>Menu</h1>
 
-<!-- SEARCH BOX -->
 <div class="card">
   <form method="get" class="grid">
-
-    <!-- NEW: search by name -->
     <label>Search by name
       <input type="text" name="q" value="<?= e($q) ?>" placeholder="e.g. momo, pizza, cake">
     </label>
 
     <label>Min Price (Rs.)
-      <input type="number" step="0.01" min="0" name="min_price" value="<?= e($minPrice) ?>" placeholder="0">
+      <input type="number" step="0.01" min="0" name="min_price" value="<?= e($minPrice) ?>">
     </label>
 
     <label>Max Price (Rs.)
-      <input type="number" step="0.01" min="0" name="max_price" value="<?= e($maxPrice) ?>" placeholder="500">
+      <input type="number" step="0.01" min="0" name="max_price" value="<?= e($maxPrice) ?>">
     </label>
 
     <label>Cuisine
       <select name="cuisine">
         <option value="">Any</option>
         <?php foreach ($cuisines as $cu): ?>
-          <option value="<?= e($cu) ?>" <?= $cu === $cuisine ? 'selected' : '' ?>>
-            <?= e($cu) ?>
-          </option>
+          <option value="<?= e($cu) ?>" <?= $cu === $cuisine ? 'selected' : '' ?>><?= e($cu) ?></option>
         <?php endforeach; ?>
       </select>
     </label>
@@ -88,43 +81,31 @@ $cuisines = $pdo->query("SELECT DISTINCT cuisine FROM menu_items ORDER BY cuisin
     <label>Availability
       <select name="available">
         <option value="1" <?= $avail === '1' ? 'selected' : '' ?>>Available</option>
-        <option value=""  <?= $avail === '' ? 'selected' : '' ?>>Any</option>
+        <option value=""  <?= $avail === ''  ? 'selected' : '' ?>>Any</option>
         <option value="0" <?= $avail === '0' ? 'selected' : '' ?>>Unavailable</option>
       </select>
     </label>
 
     <div style="align-self:end; display:flex; gap:10px;">
       <button class="btn primary" type="submit">Search</button>
-      <a class="btn" href="/restaurant/menu.php">Reset</a>
+      <a class="btn" href="<?= $BASE_URL ?>/menu.php">Reset</a>
     </div>
   </form>
-
-  <p class="muted" style="margin-top:10px;">
-    Tip: Search by name + filter by price/cuisine/availability together.
-  </p>
 </div>
 
-<!-- MENU ITEMS -->
 <div class="grid">
 <?php foreach ($items as $i): ?>
   <?php
     $imgFile = trim((string)($i['image_url'] ?? ''));
     if ($imgFile === '') $imgFile = 'placeholder.jpg';
-    $imgPath = "/restaurant/assets/images/" . $imgFile;
+    $imgPath = $BASE_URL . "/assets/images/" . $imgFile;
   ?>
   <div class="card">
-    <img
-      src="<?= e($imgPath) ?>"
-      class="menu-img"
-      loading="lazy"
-      alt="<?= e($i['name']) ?>"
-    >
-
+    <img src="<?= e($imgPath) ?>" class="menu-img" loading="lazy" alt="<?= e($i['name']) ?>">
     <h3><?= e($i['name']) ?></h3>
     <small><?= e($i['category']) ?> · <?= e($i['cuisine']) ?></small>
-
     <p><?= e($i['description'] ?? '') ?></p>
-    <strong><?= function_exists('money') ? money($i['price']) : ('Rs. ' . number_format((float)$i['price'], 2)) ?></strong>
+    <strong><?= money($i['price']) ?></strong>
 
     <div style="margin-top:12px;">
       <?php if ((int)$i['is_available'] === 1): ?>

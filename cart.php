@@ -25,7 +25,7 @@ if ($cart) {
 <h1>Your Cart</h1>
 
 <?php if (!$cart): ?>
-  <div class="card">Your cart is empty. <a href="/restaurant/menu.php">Browse menu</a></div>
+  <div class="card">Your cart is empty. <a href="menu.php">Browse menu</a></div>
 <?php else: ?>
   <div class="card">
     <table>
@@ -42,7 +42,7 @@ if ($cart) {
           <td><?= $qty ?></td>
           <td><?= money($line) ?></td>
           <td>
-            <form method="post" action="/restaurant/ajax/remove_from_cart.php">
+            <form method="post" action="/ajax/remove_from_cart.php">
               <input type="hidden" name="item_id" value="<?= $id ?>">
               <button class="btn danger" type="submit">Remove</button>
             </form>
@@ -58,8 +58,10 @@ if ($cart) {
     </table>
 
     <div style="margin-top:12px;">
-      <a class="btn" href="/restaurant/menu.php">Back to Menu</a>
-      <a class="btn primary" href="/restaurant/checkout.php">Checkout</a>
+      <a class="btn" href="menu.php">Back to Menu</a>
+      <a class="btn primary" href="<?= $BASE_URL ?>/checkout.php">Checkout</a>
+
+
     </div>
   </div>
 <?php endif; ?>

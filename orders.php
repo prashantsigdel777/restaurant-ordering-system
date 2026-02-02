@@ -11,9 +11,9 @@ require_once __DIR__ . '/../header.php';
 <h1>Admin - Orders</h1>
 
 <div class="card">
-  <a class="btn" href="/restaurant/admin/categories.php">Manage Categories</a>
-  <a class="btn" href="/restaurant/admin/items.php">Manage Items</a>
-  <a class="btn" href="/restaurant/admin/logout.php">Logout</a>
+  <a class="btn" href="/admin/categories.php">Manage Categories</a>
+  <a class="btn" href="/admin/items.php">Manage Items</a>
+  <a class="btn" href="/admin/logout.php">Logout</a>
 </div>
 
 <div class="card">
@@ -36,7 +36,7 @@ require_once __DIR__ . '/../header.php';
         <td><?= e($o['status']) ?></td>
         <td><?= money($o['total_amount']) ?></td>
         <td><?= e($o['created_at']) ?></td>
-        <td><a class="btn" href="/restaurant/admin/order_edit.php?id=<?= (int)$o['id'] ?>">View / Update</a></td>
+        <td><a class="btn" href="/admin/order_edit.php?id=<?= (int)$o['id'] ?>">View / Update</a></td>
       </tr>
     <?php endforeach; ?>
 

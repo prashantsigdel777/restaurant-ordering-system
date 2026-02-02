@@ -11,10 +11,15 @@ require_once __DIR__ . '/../header.php';
 <h1>Admin - Orders</h1>
 
 <div class="card">
-  <a class="btn" href="categories.php">Manage Categories</a>
-  <a class="btn" href="items.php">Manage Items</a>
-  <a class="btn" href="logout.php">Logout</a>
+  <a class="btn" href="<?= $BASE_URL ?>/admin/categories.php">Manage Categories</a>
+  <a class="btn" href="<?= $BASE_URL ?>/admin/items.php">Manage Items</a>
+  <a class="btn" href="<?= $BASE_URL ?>/admin/logout.php">Logout</a>
 </div>
+
+<?php if (!empty($_SESSION['success'])): ?>
+  <div class="alert success"><?= $_SESSION['success'] ?></div>
+  <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
 <div class="card">
   <table>
@@ -34,12 +39,10 @@ require_once __DIR__ . '/../header.php';
         <td><?= e($o['customer_name']) ?></td>
         <td><?= e($o['customer_phone']) ?></td>
         <td><?= e($o['status']) ?></td>
-        <td><?= function_exists('money') ? money($o['total_amount']) : number_format((float)$o['total_amount'], 2) ?></td>
+        <td><?= money($o['total_amount']) ?></td>
         <td><?= e($o['created_at']) ?></td>
         <td class="actions">
-          <div class="table-actions">
-            <a class="btn" href="order_edit.php?id=<?= (int)$o['id'] ?>">View / Update</a>
-          </div>
+          <a class="btn" href="<?= $BASE_URL ?>/admin/order_edit.php?id=<?= (int)$o['id'] ?>">View / Update</a>
         </td>
       </tr>
     <?php endforeach; ?>
@@ -48,3 +51,4 @@ require_once __DIR__ . '/../header.php';
 </div>
 
 <?php require_once __DIR__ . '/../footer.php'; ?>
+

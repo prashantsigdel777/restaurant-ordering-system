@@ -21,7 +21,7 @@ function is_admin() {
 
 function require_admin() {
   if (!is_admin()) {
-    header("Location: /restaurant/admin/login.php");
+    header("Location: /admin/login.php");
     exit;
   }
 }

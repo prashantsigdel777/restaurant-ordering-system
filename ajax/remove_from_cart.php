@@ -7,5 +7,5 @@ $itemId = (int)($_POST['item_id'] ?? 0);
 if ($itemId > 0 && isset($_SESSION['cart'][$itemId])) {
   unset($_SESSION['cart'][$itemId]);
 }
-header('Location: /restaurant/cart.php');
+header('Location: ./cart.php');
 exit;

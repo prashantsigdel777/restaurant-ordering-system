@@ -4,7 +4,7 @@ cart_init();
 
 $cart = $_SESSION['cart'];
 if (!$cart) {
-  header('Location: /restaurant/cart.php');
+  header('Location: cart.php');
   exit;
 }
 
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['cart'] = [];
         $pdo->commit();
 
-        header("Location: /restaurant/order_success.php?id=" . $orderId);
+        header("Location: order_success.php?id=" . $orderId);
         exit;
       } catch (Throwable $e) {
         $pdo->rollBack();
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div style="margin-top:12px;">
       <button class="btn primary" type="submit">Place Order</button>
-      <a class="btn" href="/restaurant/cart.php">Back</a>
+      <a class="btn" href="cart.php">Back</a>
     </div>
   </form>
 </div>

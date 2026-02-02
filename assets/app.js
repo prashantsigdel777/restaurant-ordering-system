@@ -16,6 +16,7 @@ document.addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-add-to-cart]");
   if (!btn) return;
 
+  const base = document.body.getAttribute("data-base") || "";
   const itemId = btn.getAttribute("data-add-to-cart");
   const oldText = btn.textContent;
 
@@ -23,24 +24,24 @@ document.addEventListener("click", async (e) => {
   btn.textContent = "Adding...";
 
   try {
-    const out = await postForm("/restaurant/ajax/add_to_cart.php", {
+    const out = await postForm(`${base}/ajax/add_to_cart.php`, {
       item_id: itemId,
       qty: 1,
     });
 
     if (out.ok) {
-      setCartCount(out.cartCount); // ✅ updates navbar immediately
+      setCartCount(out.cartCount);
       btn.textContent = "Added ✓";
       setTimeout(() => {
         btn.textContent = oldText;
         btn.disabled = false;
       }, 600);
     } else {
-      alert(out.error || "Failed to add to cart");
+      alert(out.error || "Failed");
       btn.textContent = oldText;
       btn.disabled = false;
     }
-  } catch (err) {
+  } catch {
     alert("Network error");
     btn.textContent = oldText;
     btn.disabled = false;

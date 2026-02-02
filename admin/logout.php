@@ -11,5 +11,5 @@ session_destroy();
 session_regenerate_id(true);
 
 /* Redirect to admin login page */
-header('Location: /restaurant/admin/login.php');
+header('Location:./admin/login.php');
 exit;

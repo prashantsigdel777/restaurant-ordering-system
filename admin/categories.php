@@ -7,23 +7,23 @@ $error = '';
 $action = $_GET['action'] ?? '';
 $id = (int)($_GET['id'] ?? 0);
 
-// Handle DELETE via POST + CSRF
+/* DELETE */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
   csrf_validate_post();
-
   $deleteId = (int)$_POST['delete_id'];
-  if ($deleteId > 0) {
-    try {
-      $stmt = $pdo->prepare("DELETE FROM menu_categories WHERE id = ?");
-      $stmt->execute([$deleteId]);
-    } catch (Throwable $e) {
-      // If category is linked to menu_items, FK may block delete
-      $error = "Cannot delete category because it is used by menu items.";
-    }
+
+  try {
+    $stmt = $pdo->prepare("DELETE FROM menu_categories WHERE id = ?");
+    $stmt->execute([$deleteId]);
+  } catch (Throwable $e) {
+    $error = "Cannot delete: category is used by menu items.";
   }
+
+  header("Location: {$BASE_URL}/admin/categories.php");
+  exit;
 }
 
-// Handle CREATE / UPDATE via POST + CSRF
+/* CREATE / UPDATE */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_id'])) {
   csrf_validate_post();
 
@@ -35,26 +35,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_id'])) {
     $error = "Category name is required.";
   } else {
     if ($updateId > 0) {
-      $stmt = $pdo->prepare("UPDATE menu_categories SET name = ?, description = ? WHERE id = ?");
+      $stmt = $pdo->prepare("UPDATE menu_categories SET name=?, description=? WHERE id=?");
       $stmt->execute([$name, $desc, $updateId]);
     } else {
       $stmt = $pdo->prepare("INSERT INTO menu_categories (name, description) VALUES (?, ?)");
       $stmt->execute([$name, $desc]);
     }
-    header("Location: categories.php");
+    header("Location: {$BASE_URL}/admin/categories.php");
     exit;
   }
 }
 
-// Load category for EDIT form
+/* EDIT MODE */
 $edit = null;
 if ($action === 'edit' && $id > 0) {
-  $stmt = $pdo->prepare("SELECT * FROM menu_categories WHERE id = ?");
+  $stmt = $pdo->prepare("SELECT * FROM menu_categories WHERE id=?");
   $stmt->execute([$id]);
   $edit = $stmt->fetch();
 }
 
-// Get all categories
 $cats = $pdo->query("SELECT * FROM menu_categories ORDER BY name")->fetchAll();
 
 require_once __DIR__ . '/../header.php';
@@ -63,9 +62,9 @@ require_once __DIR__ . '/../header.php';
 <h1>Admin - Categories</h1>
 
 <div class="card">
-  <a class="btn" href="/restaurant/admin/items.php">Manage Items</a>
-  <a class="btn" href="/restaurant/admin/orders.php">Manage Orders</a>
-  <a class="btn" href="/restaurant/admin/logout.php">Logout</a>
+  <a class="btn" href="<?= $BASE_URL ?>/admin/items.php">Manage Items</a>
+  <a class="btn" href="<?= $BASE_URL ?>/admin/orders.php">Orders</a>
+  <a class="btn" href="<?= $BASE_URL ?>/admin/logout.php">Logout</a>
 </div>
 
 <?php if ($error): ?>
@@ -77,7 +76,6 @@ require_once __DIR__ . '/../header.php';
 
   <form method="post">
     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-
     <?php if ($edit): ?>
       <input type="hidden" name="update_id" value="<?= (int)$edit['id'] ?>">
     <?php endif; ?>
@@ -91,7 +89,7 @@ require_once __DIR__ . '/../header.php';
     <div style="margin-top:12px;">
       <button class="btn primary" type="submit"><?= $edit ? "Update" : "Create" ?></button>
       <?php if ($edit): ?>
-        <a class="btn" href="categories.php">Cancel</a>
+        <a class="btn" href="<?= $BASE_URL ?>/admin/categories.php">Cancel</a>
       <?php endif; ?>
     </div>
   </form>
@@ -99,15 +97,8 @@ require_once __DIR__ . '/../header.php';
 
 <div class="card">
   <h3>All Categories</h3>
-
   <table>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Created</th>
-      <th>Actions</th>
-    </tr>
+    <tr><th>ID</th><th>Name</th><th>Description</th><th>Created</th><th class="actions">Actions</th></tr>
 
     <?php foreach ($cats as $c): ?>
       <tr>
@@ -115,17 +106,18 @@ require_once __DIR__ . '/../header.php';
         <td><?= e($c['name']) ?></td>
         <td><?= e($c['description'] ?? '') ?></td>
         <td><?= e($c['created_at']) ?></td>
-        <td style="white-space:nowrap;">
-          <a class="btn" href="categories.php?action=edit&id=<?= (int)$c['id'] ?>">Edit</a>
+        <td class="actions">
+          <a class="btn" href="<?= $BASE_URL ?>/admin/categories.php?action=edit&id=<?= (int)$c['id'] ?>">Edit</a>
 
           <form method="post" style="display:inline;" onsubmit="return confirm('Delete this category?');">
             <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
             <input type="hidden" name="delete_id" value="<?= (int)$c['id'] ?>">
-            <button class="btn danger" type="submit">Delete</button>
+            <button class="btn" type="submit">Delete</button>
           </form>
         </td>
       </tr>
     <?php endforeach; ?>
+
   </table>
 </div>
 
