@@ -2,9 +2,9 @@
 session_start();
 
 const DB_HOST = 'localhost';
-const DB_NAME = 'restaurant_app';
-const DB_USER = 'root';
-const DB_PASS = '';
+const DB_NAME = 'NP03CS4A240171';
+const DB_USER = 'NP03CS4A240171';
+const DB_PASS = 'ZdAAKSJzy1';
 
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = 'admin123';
