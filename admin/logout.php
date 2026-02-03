@@ -11,5 +11,5 @@ session_destroy();
 session_regenerate_id(true);
 
 /* Redirect to admin login page */
-header('Location:./admin/login.php');
+header('Location:./login.php');
 exit;
